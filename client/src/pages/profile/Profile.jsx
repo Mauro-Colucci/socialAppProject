@@ -12,13 +12,15 @@ import Posts from "../../components/posts/Posts"
 import { makeRequest } from "../../utils/axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
+import Update from "../../components/update/Update";
 
 
 const Profile = () => {
 
   const {currentUser} = useContext(AuthContext)
+  const [openUpdate, setOpenUpdate] = useState(false)
 
   const userId = Number(useLocation().pathname.split('/')[2])
 
@@ -102,7 +104,7 @@ const Profile = () => {
                     </div>
                   </div>
                   {userId === currentUser.id 
-                    ? <button>Update</button>
+                    ? <button onClick={()=> setOpenUpdate(true)}>Update</button>
                     : relationshipIsLoading
                     ? "Loading"
                     : <button onClick={handleFollow}>{relationshipData.includes(currentUser.id)? "following": "follow"}</button>}
@@ -116,6 +118,7 @@ const Profile = () => {
             </div>
           </>
     }
+    {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data}/>}
     </div>
   );
 };
